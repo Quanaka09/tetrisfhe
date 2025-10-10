@@ -1,9 +1,9 @@
 [build]
-  command = "pnpm install && pnpm sdk:build && cd packages/react-showcase && rm -rf ./node_modules/@fhevm-sdk && mkdir -p ./node_modules/@fhevm-sdk && cp -r ../fhevm-sdk/dist ./node_modules/@fhevm-sdk/ && cp ../fhevm-sdk/package.json ./node_modules/@fhevm-sdk/ && pnpm run build"
+  command = "pnpm install && pnpm sdk:build && cd packages/react-showcase && pnpm run build"
   publish = "packages/react-showcase/build"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
 
 [[redirects]]
   from = "/*"
