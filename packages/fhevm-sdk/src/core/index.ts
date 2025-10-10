@@ -1,6 +1,10 @@
-export * from "../internal/fhevm";
-export * from "../internal/RelayerSDKLoader";
-export * from "../internal/PublicKeyStorage";
-export * from "../internal/fhevmTypes";
-export * from "../internal/constants";
+/**
+ * Universal FHEVM SDK Core
+ * Simple, clean implementation that matches showcase APIs
+ */
 
+// Core FHEVM functionality
+export * from './fhevm.js';
+export * from './encryption.js';
+export * from './decryption.js';
+export * from './contracts.js';

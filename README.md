@@ -102,6 +102,7 @@ Each showcase is a complete development environment ready to use:
 | 💚 **Vue App** | `packages/vue-showcase/` | `pnpm --filter vue-showcase dev` | 3003 | Full Vue app with FHEVM |
 | 🖥️ **Node.js CLI** | `packages/node-showcase/` | `pnpm --filter node-showcase start` | CLI | Node.js FHEVM demo |
 | 🔧 **SDK Package** | `packages/fhevm-sdk/` | `pnpm --filter fhevm-sdk build` | N/A | Universal FHEVM SDK |
+| 🔨 **Smart Contracts** | `packages/hardhat/` | `pnpm --filter hardhat deploy` | N/A | FHE Counter Contract |
 
 ### **How Each Environment Works**
 
@@ -168,6 +169,48 @@ pnpm build  # Builds the Universal SDK
 # - Core FHEVM functionality
 # - Ready to edit and develop
 ```
+
+#### **🔨 Smart Contracts Environment**
+```bash
+# Location: packages/hardhat/
+cd packages/hardhat
+pnpm deploy  # Deploys FHE Counter contract to Sepolia
+
+# What's included:
+# - FHE Counter smart contract
+# - Deployment scripts
+# - Contract ABI and addresses
+# - Ready to deploy and interact with
+```
+
+## 🔨 **Smart Contract Deployment**
+
+### **Deploy FHE Counter Contract**
+```bash
+# Navigate to Hardhat package
+cd packages/hardhat
+
+# Install dependencies (if not already done)
+pnpm install
+
+# Deploy to Sepolia testnet
+pnpm deploy
+
+# This will:
+# 1. Compile the FHE Counter contract
+# 2. Deploy to Sepolia testnet
+# 3. Save contract address and ABI
+# 4. Make contract available for showcases
+```
+
+### **Contract Details**
+- **Contract Name:** FHECounter
+- **Network:** Sepolia testnet
+- **Functions:** 
+  - `getCount()` - Returns encrypted count
+  - `increment()` - Increments encrypted count
+  - `decrement()` - Decrements encrypted count
+- **Public Data:** Encrypted count and sum for public decryption
 
 ## 🎯 **Framework Examples**
 

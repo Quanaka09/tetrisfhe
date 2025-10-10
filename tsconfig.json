@@ -11,7 +11,12 @@
     "resolveJsonModule": true
   },
   "include": [
-    "packages/**/*",
+    "packages/fhevm-sdk/**/*",
+    "packages/hardhat/**/*",
     "scripts/**/*"
+  ],
+  "exclude": [
+    "packages/*-showcase/**/*",
+    "node_modules"
   ]
 }
