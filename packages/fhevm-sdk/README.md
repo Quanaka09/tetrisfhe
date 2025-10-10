@@ -32,6 +32,7 @@ fhevm-sdk/
 │   │   └── contracts.ts   # Contract interactions
 │   ├── adapters/          # Framework-specific adapters
 │   │   ├── react.ts       # React hooks
+│   │   ├── vue.ts         # Vue composables
 │   │   ├── node.ts        # Node.js utilities
 │   │   └── vanilla.ts     # Vanilla JS utilities
 │   └── index.ts           # Main exports
@@ -42,27 +43,27 @@ fhevm-sdk/
 
 ### **FHEVM Initialization**
 ```typescript
-import { initializeFheInstance } from '@fhevm-sdk/core'
+import { initializeFheInstance } from '@fhevm-sdk'
 
 const fheInstance = await initializeFheInstance()
 ```
 
 ### **Encryption**
 ```typescript
-import { encryptValue } from '@fhevm-sdk/core'
+import { createEncryptedInput } from '@fhevm-sdk'
 
-const encrypted = await encryptValue(contractAddress, userAddress, value)
+const encrypted = await createEncryptedInput(contractAddress, userAddress, value)
 ```
 
 ### **Decryption**
 ```typescript
-import { requestUserDecryption, fetchPublicDecryption } from '@fhevm-sdk/core'
+import { decryptValue, publicDecrypt } from '@fhevm-sdk'
 
 // EIP-712 user decryption
-const decrypted = await requestUserDecryption(contractAddress, signer, handle)
+const decrypted = await decryptValue(handle, contractAddress, signer)
 
 // Public decryption
-const publicDecrypted = await fetchPublicDecryption(handles)
+const publicDecrypted = await publicDecrypt(handles)
 ```
 
 ## 🎯 **Framework Adapters**
@@ -192,10 +193,10 @@ pnpm lint
 ```json
 {
   "exports": {
-    ".": "./dist/index.js",
-    "./react": "./dist/adapters/react.js",
-    "./node": "./dist/adapters/node.js",
-    "./vanilla": "./dist/adapters/vanilla.js"
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
   }
 }
 ```
