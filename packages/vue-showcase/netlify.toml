@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm install && pnpm sdk:build && cd packages/vue-showcase && pnpm run build"
+  command = "pnpm install && pnpm sdk:build && cd packages/vue-showcase && cp -r ../fhevm-sdk/dist ./node_modules/@fhevm-sdk && pnpm run build"
   publish = "packages/vue-showcase/dist"
 
 [build.environment]
