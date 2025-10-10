@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm install && pnpm sdk:build && pnpm --filter react-showcase build"
+  command = "pnpm install && pnpm sdk:build && cd packages/react-showcase && rm -rf node_modules/@fhevm-sdk && ln -sf ../../fhevm-sdk node_modules/@fhevm-sdk && pnpm run build"
   publish = "packages/react-showcase/build"
 
 [build.environment]
