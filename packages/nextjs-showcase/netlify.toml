@@ -1,9 +1,9 @@
 [build]
-  command = "pnpm install && pnpm sdk:build && cd packages/nextjs-showcase && rm -rf ./node_modules/@fhevm-sdk && mkdir -p ./node_modules/@fhevm-sdk && cp -r ../fhevm-sdk/dist ./node_modules/@fhevm-sdk/ && cp ../fhevm-sdk/package.json ./node_modules/@fhevm-sdk/ && pnpm run build"
+  command = "pnpm install && pnpm sdk:build && pnpm --filter nextjs-showcase build"
   publish = "packages/nextjs-showcase/.next"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
 
 [[redirects]]
   from = "/*"
