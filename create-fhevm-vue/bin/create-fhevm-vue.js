@@ -31,7 +31,8 @@ if (!projectName) {
 const currentDir = process.cwd();
 const projectDir = path.join(currentDir, projectName);
 const templateDir = path.join(__dirname, '../templates/vue-template');
-const sdkDir = path.join(__dirname, '../../packages/fhevm-sdk'); // Path to the original SDK
+const bundledSdkDir = path.join(templateDir, 'fhevm-sdk'); // Path to the bundled SDK in template
+const hardhatDir = path.join(templateDir, 'hardhat'); // Path to the bundled Hardhat in template
 
 console.log(`Creating a new Vue FHEVM app in ${projectDir}`);
 
@@ -46,19 +47,23 @@ templateFiles.forEach(file => {
   copyRecursive(srcPath, destPath);
 });
 
-// Copy FHEVM SDK
+// Copy FHEVM SDK from bundled template
 const sdkDestDir = path.join(projectDir, 'fhevm-sdk');
 fs.mkdirSync(sdkDestDir, { recursive: true });
 
-// Copy SDK dist folder
-const sdkDistSrc = path.join(sdkDir, 'dist');
+// Copy SDK dist folder from bundled template
+const sdkDistSrc = path.join(bundledSdkDir, 'dist');
 const sdkDistDest = path.join(sdkDestDir, 'dist');
 copyRecursive(sdkDistSrc, sdkDistDest);
 
-// Copy SDK package.json
-const sdkPackageSrc = path.join(sdkDir, 'package.json');
+// Copy SDK package.json from bundled template
+const sdkPackageSrc = path.join(bundledSdkDir, 'package.json');
 const sdkPackageDest = path.join(sdkDestDir, 'package.json');
 fs.copyFileSync(sdkPackageSrc, sdkPackageDest);
+
+// Copy Hardhat directory from bundled template
+const hardhatDestDir = path.join(projectDir, 'hardhat');
+copyRecursive(hardhatDir, hardhatDestDir);
 
 // Update package.json for local SDK dependency
 const packageJsonPath = path.join(projectDir, 'package.json');
