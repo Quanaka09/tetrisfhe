@@ -18,15 +18,15 @@ A framework-agnostic frontend toolkit that helps developers run confidential dAp
 
 ```
 fhevm-react-template/
-├── 📦 packages/
-│   ├── <img src="public/node.svg" width="32" height="32" alt="SDK"> fhevm-sdk/              # Universal FHEVM SDK Core
-│   ├── <img src="public/react.svg" width="32" height="32" alt="React"> react-showcase/         # React Example (Port 3000)
-│   ├── <img src="public/nextjs.svg" width="32" height="32" alt="Next.js"> nextjs-showcase/        # Next.js Example (Port 3001)
-│   ├── <img src="public/vue.svg" width="32" height="32" alt="Vue"> vue-showcase/           # Vue Example (Port 3003)
-│   ├── <img src="public/node.svg" width="32" height="32" alt="Node.js"> node-showcase/          # Node.js CLI Example
-│   └── 🔨 hardhat/                # Smart Contracts
-├── 📄 pnpm-workspace.yaml         # Monorepo configuration
-└── 📋 README.md                   # This file
+├── packages/
+│   ├── fhevm-sdk/              # Universal FHEVM SDK Core
+│   ├── react-showcase/         # React Example (Port 3000)
+│   ├── nextjs-showcase/        # Next.js Example (Port 3001)
+│   ├── vue-showcase/           # Vue Example (Port 3003)
+│   ├── node-showcase/          # Node.js CLI Example
+│   └── hardhat/                # Smart Contracts
+├── pnpm-workspace.yaml         # Monorepo configuration
+└── README.md                   # This file
 ```
 
 ## 🚀 **Quick Start**
