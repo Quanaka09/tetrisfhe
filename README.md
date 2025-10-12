@@ -2,6 +2,11 @@
 
 A framework-agnostic frontend toolkit that helps developers run confidential dApps with ease. Built for the Zama Bounty Program - Universal FHEVM SDK Challenge.
 
+## 🌍 **Languages / Langues / 语言**
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](README.md)
+[![Français](https://img.shields.io/badge/Français-🇫🇷-red)](README.fr.md)
+[![中文](https://img.shields.io/badge/中文-🇨🇳-green)](README.zh.md)
+
 ## 🏆 **Bounty Requirements Met**
 
 ### **✅ 1. Can be imported into any dApp**
