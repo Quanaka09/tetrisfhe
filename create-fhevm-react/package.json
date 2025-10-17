@@ -1,6 +1,6 @@
 {
   "name": "create-fhevm-react",
-  "version": "1.3.0",
+  "version": "1.3.4",
   "description": "Create a React app with FHEVM SDK integration",
   "bin": {
     "create-fhevm-react": "./bin/create-fhevm-react.js"

@@ -8,12 +8,8 @@ A CLI to create a Next.js app with FHEVM SDK integration.
 npx create-fhevm-nextjs my-app
 cd my-app
 npm install
-# Copy FHEVM SDK for production deployment
-cp fhevm-sdk/dist/fhevmInstance.js src/lib/
 npm run dev
 ```
-
-**📝 Note:** Copy the consolidated `fhevmInstance.js` file to `src/lib/` for production deployment compatibility. Update imports from `@fhevm-sdk` to `./lib/fhevmInstance` in your components.
 
 ## Environment Setup
 

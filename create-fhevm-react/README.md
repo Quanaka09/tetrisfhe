@@ -8,12 +8,8 @@ A CLI to create a React app with FHEVM SDK integration.
 npx create-fhevm-react my-app
 cd my-app
 npm install
-# Copy FHEVM SDK for production deployment
-cp fhevm-sdk/dist/fhevmInstance.js src/lib/
 npm start
 ```
-
-**📝 Note:** Copy the consolidated `fhevmInstance.js` file to `src/lib/` for production deployment compatibility. Update imports from `@fhevm-sdk` to `./lib/fhevmInstance` in your components.
 
 ## Environment Setup
 

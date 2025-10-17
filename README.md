@@ -78,28 +78,20 @@ Create a new FHEVM project instantly with our NPX packages:
 npx create-fhevm-react my-app
 cd my-app
 npm install
-# Copy FHEVM SDK for production deployment
-cp fhevm-sdk/dist/fhevmInstance.js src/lib/
 npm start
 
 # Next.js
 npx create-fhevm-nextjs my-app
 cd my-app
 npm install
-# Copy FHEVM SDK for production deployment
-cp fhevm-sdk/dist/fhevmInstance.js src/lib/
 npm run dev
 
 # Vue 
 npx create-fhevm-vue my-app
 cd my-app
 npm install
-# Copy FHEVM SDK for production deployment
-cp fhevm-sdk/dist/fhevmInstance.js src/lib/
 npm run dev
 ```
-
-**📝 Note:** Copy the  `fhevmInstance.js` file to `src/lib/` for production deployment compatibility. Update imports from `@fhevm-sdk` to `./lib/fhevmInstance` in your components.
 
 ### **Option 2: Development Environment**
 Clone and run the full development environment:

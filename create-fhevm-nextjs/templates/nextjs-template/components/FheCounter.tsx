@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ethers } from 'ethers';
-import { decryptValue, createEncryptedInput } from 'fhevm-sdk';
+import { decryptValue, createEncryptedInput } from '../src/lib/fhevmInstance';
 
 // Contract configuration
 const CONTRACT_ADDRESSES = {

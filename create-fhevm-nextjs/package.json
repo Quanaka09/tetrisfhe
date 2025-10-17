@@ -1,6 +1,6 @@
 {
   "name": "create-fhevm-nextjs",
-  "version": "1.5.0",
+  "version": "1.5.4",
   "description": "Create a NextJS app with FHEVM SDK integration",
   "bin": {
     "create-fhevm-nextjs": "./bin/create-fhevm-nextjs.js"

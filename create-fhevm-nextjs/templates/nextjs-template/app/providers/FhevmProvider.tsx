@@ -1,7 +1,7 @@
 'use client';
 
-import React, { createContext, useContext } from 'react';
-import { useWallet as useWalletHook, useFhevm as useFhevmHook, useContract as useContractHook, useFhevmOperations as useFhevmOperationsHook } from 'fhevm-sdk';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { initializeFheInstance, createEncryptedInput, decryptValue } from '../../src/lib/fhevmInstance';
 
 // Create a comprehensive context that includes all wagmi-like hooks
 interface FhevmContextType {
@@ -17,7 +17,7 @@ interface FhevmContextType {
   // FHEVM
   fheInstance: any;
   isInitialized: boolean;
-  error: string; // Changed from fhevmError to error
+  error: string;
   initialize: () => Promise<void>;
   
   // Contract
@@ -36,39 +36,136 @@ interface FhevmContextType {
 const FhevmContext = createContext<FhevmContextType | undefined>(undefined);
 
 export function FhevmProvider({ children }: { children: React.ReactNode }) {
-  // Use all the wagmi-like hooks
-  const wallet = useWalletHook();
-  const fhevm = useFhevmHook();
-  const contract = useContractHook('', []); // Will be set by individual components
-  const operations = useFhevmOperationsHook();
+  const [address, setAddress] = useState<string>('');
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [chainId, setChainId] = useState<number>(0);
+  const [isConnecting, setIsConnecting] = useState<boolean>(false);
+  const [walletError, setWalletError] = useState<string>('');
+  const [fheInstance, setFheInstance] = useState<any>(null);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [isBusy, setIsBusy] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>('');
+
+  // Connect wallet
+  const connect = async () => {
+    if (typeof window === 'undefined' || !window.ethereum) {
+      setWalletError('Please install MetaMask or connect a wallet');
+      return;
+    }
+
+    try {
+      setIsConnecting(true);
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+      
+      setAddress(accounts[0]);
+      setChainId(parseInt(chainId, 16));
+      setIsConnected(true);
+      setWalletError('');
+    } catch (err: any) {
+      setWalletError(err.message);
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+  // Disconnect wallet
+  const disconnect = () => {
+    setAddress('');
+    setIsConnected(false);
+    setChainId(0);
+    setWalletError('');
+  };
+
+  // Initialize FHEVM
+  const initialize = async () => {
+    try {
+      setError('');
+      const instance = await initializeFheInstance();
+      setFheInstance(instance);
+      setIsInitialized(true);
+    } catch (err: any) {
+      setError(err.message);
+      setIsInitialized(false);
+    }
+  };
+
+  // Encrypt function
+  const encrypt = async (contractAddress: string, userAddress: string, value: number) => {
+    try {
+      setIsBusy(true);
+      setMessage('Encrypting...');
+      const result = await createEncryptedInput(contractAddress, userAddress, value);
+      setMessage('Encryption completed');
+      return result;
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsBusy(false);
+    }
+  };
+
+  // Decrypt function
+  const decrypt = async (handle: string, contractAddress: string, signer: any) => {
+    try {
+      setIsBusy(true);
+      setMessage('Decrypting...');
+      const result = await decryptValue(handle, contractAddress, signer);
+      setMessage('Decryption completed');
+      return result;
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsBusy(false);
+    }
+  };
+
+  // Execute transaction function
+  const executeTransaction = async (contract: any, method: string, encryptedData: string, proof: string, ...args: any[]) => {
+    try {
+      setIsBusy(true);
+      setMessage('Executing transaction...');
+      const tx = await contract[method](encryptedData, proof, ...args);
+      setMessage('Transaction executed');
+      return tx;
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsBusy(false);
+    }
+  };
 
   const contextValue: FhevmContextType = {
     // Wallet
-    address: wallet.address,
-    isConnected: wallet.isConnected,
-    chainId: wallet.chainId,
-    isConnecting: wallet.isConnecting,
-    walletError: wallet.error,
-    connect: wallet.connect,
-    disconnect: wallet.disconnect,
+    address,
+    isConnected,
+    chainId,
+    isConnecting,
+    walletError,
+    connect,
+    disconnect,
     
     // FHEVM
-    fheInstance: fhevm.instance,
-    isInitialized: fhevm.isInitialized,
-    error: fhevm.error,
-    initialize: fhevm.initialize,
+    fheInstance,
+    isInitialized,
+    error,
+    initialize,
     
     // Contract
-    contract: contract.contract,
-    isContractReady: contract.isReady,
-    contractError: contract.error,
+    contract: null,
+    isContractReady: false,
+    contractError: '',
     
     // Operations
-    encrypt: operations.encrypt,
-    decrypt: operations.decrypt,
-    executeTransaction: operations.executeTransaction,
-    isBusy: operations.isBusy,
-    message: operations.message,
+    encrypt,
+    decrypt,
+    executeTransaction,
+    isBusy,
+    message,
   };
 
   return (
