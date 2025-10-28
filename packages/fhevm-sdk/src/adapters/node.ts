@@ -1,6 +1,6 @@
 /**
  * Node.js Adapter - Universal FHEVM SDK
- * Clean, simple Node.js utilities using your working implementation
+ * Real server-side FHEVM operations with RPC and private key support
  */
 
 import { 
@@ -11,17 +11,51 @@ import {
   requestUserDecryption,
   publicDecrypt
 } from '../core/index.js';
+import { ethers } from 'ethers';
+
+export interface FhevmNodeOptions {
+  rpcUrl?: string;
+  privateKey?: string;
+  chainId?: number;
+}
 
 /**
- * Simple Node.js FHEVM manager
+ * Enhanced Node.js FHEVM manager with server-side capabilities
  */
 export class FhevmNode {
   private instance: any = null;
   private isReady = false;
+  private provider: ethers.JsonRpcProvider | null = null;
+  private wallet: ethers.Wallet | null = null;
+  private options: FhevmNodeOptions;
+
+  constructor(options: FhevmNodeOptions = {}) {
+    this.options = {
+      rpcUrl: options.rpcUrl || 'https://sepolia.infura.io/v3/YOUR_INFURA_KEY',
+      chainId: options.chainId || 11155111, // Sepolia
+      ...options
+    };
+  }
 
   async initialize() {
     try {
-      this.instance = await initializeFheInstance();
+      console.log('🚀 Initializing FHEVM Node.js instance...');
+      
+      // Initialize FHEVM with RPC URL
+      this.instance = await initializeFheInstance({ 
+        rpcUrl: this.options.rpcUrl 
+      });
+      
+      // Setup provider and wallet for server-side operations
+      this.provider = new ethers.JsonRpcProvider(this.options.rpcUrl);
+      
+      if (this.options.privateKey) {
+        this.wallet = new ethers.Wallet(this.options.privateKey, this.provider);
+        console.log(`✅ Wallet connected: ${await this.wallet.getAddress()}`);
+      } else {
+        console.log('⚠️ No private key provided - wallet operations disabled');
+      }
+      
       this.isReady = true;
       console.log('✅ FHEVM Node instance ready');
     } catch (error) {
@@ -32,17 +66,90 @@ export class FhevmNode {
 
   async encrypt(contractAddress: string, userAddress: string, value: number) {
     if (!this.isReady) throw new Error('FHEVM not initialized');
+    console.log(`🔐 Encrypting value ${value} for contract ${contractAddress}, user ${userAddress}`);
     return createEncryptedInput(contractAddress, userAddress, value);
   }
 
-  async decrypt(handle: string, contractAddress: string, signer: any) {
+  async decrypt(handle: string, contractAddress: string, signer?: any) {
     if (!this.isReady) throw new Error('FHEVM not initialized');
-    return decryptValue(handle, contractAddress, signer);
+    
+    // Use provided signer or default wallet
+    const signerToUse = signer || this.wallet;
+    if (!signerToUse) {
+      throw new Error('No signer available. Provide a signer or initialize with privateKey');
+    }
+    
+    console.log(`🔓 Decrypting handle ${handle} for contract ${contractAddress}`);
+    return decryptValue(handle, contractAddress, signerToUse);
   }
 
   async publicDecrypt(handle: string) {
     if (!this.isReady) throw new Error('FHEVM not initialized');
+    console.log(`🔓 Public decrypting handle ${handle}`);
     return publicDecrypt(handle);
+  }
+
+  /**
+   * Create a contract instance for server-side interactions
+   */
+  createContract(address: string, abi: any[]) {
+    if (!this.provider) throw new Error('Provider not initialized');
+    if (!this.wallet) throw new Error('Wallet not initialized - provide privateKey');
+    
+    return new ethers.Contract(address, abi, this.wallet);
+  }
+
+  /**
+   * Execute encrypted transaction
+   */
+  async executeEncryptedTransaction(
+    contract: ethers.Contract,
+    methodName: string,
+    encryptedData: any,
+    ...additionalParams: any[]
+  ) {
+    if (!this.isReady) throw new Error('FHEVM not initialized');
+    
+    console.log(`📝 Executing encrypted transaction: ${methodName}`);
+    
+    try {
+      const tx = await contract[methodName](
+        encryptedData.encryptedData,
+        encryptedData.proof,
+        ...additionalParams
+      );
+      
+      console.log(`✅ Transaction sent: ${tx.hash}`);
+      const receipt = await tx.wait();
+      console.log(`✅ Transaction confirmed: ${receipt?.hash}`);
+      
+      return receipt;
+    } catch (error) {
+      console.error('❌ Transaction failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get wallet address
+   */
+  async getAddress(): Promise<string | null> {
+    if (!this.wallet) return null;
+    return this.wallet.getAddress();
+  }
+
+  /**
+   * Get provider
+   */
+  getProvider() {
+    return this.provider;
+  }
+
+  /**
+   * Get wallet
+   */
+  getWallet() {
+    return this.wallet;
   }
 
   getInstance() {
@@ -51,5 +158,18 @@ export class FhevmNode {
 
   getStatus() {
     return this.isReady ? 'ready' : 'idle';
+  }
+
+  /**
+   * Get configuration info
+   */
+  getConfig() {
+    return {
+      rpcUrl: this.options.rpcUrl,
+      chainId: this.options.chainId,
+      hasWallet: !!this.wallet,
+      hasProvider: !!this.provider,
+      isReady: this.isReady
+    };
   }
 }

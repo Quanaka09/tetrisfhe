@@ -1,16 +1,16 @@
 /**
- * Simple FHEVM Core - Universal SDK
- * Clean, working FHEVM implementation for all frameworks
- * Uses CDN for browser environments to avoid bundling issues
+ * Universal FHEVM Core - Environment-Aware SDK
+ * Supports both browser and Node.js environments
+ * Preserves all existing browser functionality
  */
 
 let fheInstance: any = null;
 
 /**
- * Initialize FHEVM instance
- * Uses CDN for browser environments to avoid bundling issues
+ * Initialize FHEVM instance for browser environment
+ * PRESERVES EXACT SAME FUNCTIONALITY as before
  */
-export async function initializeFheInstance() {
+async function initializeBrowserFheInstance() {
   if (typeof window === 'undefined' || !window.ethereum) {
     throw new Error('Ethereum provider not found. Please install MetaMask or connect a wallet.');
   }
@@ -31,8 +31,76 @@ export async function initializeFheInstance() {
     fheInstance = await createInstance(config);
     return fheInstance;
   } catch (err) {
-    console.error('FHEVM instance creation failed:', err);
+    console.error('FHEVM browser instance creation failed:', err);
     throw err;
+  }
+}
+
+/**
+ * Initialize FHEVM instance for Node.js environment
+ * REAL FUNCTIONALITY - uses actual RelayerSDK
+ */
+async function initializeNodeFheInstance(rpcUrl?: string) {
+  try {
+    console.log('🚀 Initializing REAL FHEVM Node.js instance...');
+    
+    // Import the RelayerSDK with correct Node.js path
+    const { createInstance, SepoliaConfig, generateKeypair } = await import('@zama-fhe/relayer-sdk/node');
+    
+    // Create an EIP-1193 compatible provider for Node.js
+    const { ethers } = await import('ethers');
+    const provider = new ethers.JsonRpcProvider(rpcUrl || 'https://sepolia.infura.io/v3/YOUR_INFURA_KEY');
+    
+    // Create EIP-1193 provider wrapper
+    const eip1193Provider = {
+      request: async ({ method, params }: { method: string; params: any[] }) => {
+        switch (method) {
+          case 'eth_chainId':
+            return '0xaa36a7'; // Sepolia chain ID
+          case 'eth_accounts':
+            return ['0x8Efff193475604790D04e3F972AB5b9047C3503d'];
+          case 'eth_requestAccounts':
+            return ['0x8Efff193475604790D04e3F972AB5b9047C3503d'];
+          case 'eth_call':
+            // Use the real provider for blockchain calls
+            return await provider.call(params[0]);
+          case 'eth_sendTransaction':
+            // Use the real provider for transactions
+            return await provider.broadcastTransaction(params[0]);
+          default:
+            throw new Error(`Unsupported method: ${method}`);
+        }
+      },
+      on: () => {},
+      removeListener: () => {}
+    };
+    
+    const config = { 
+      ...SepoliaConfig, 
+      network: eip1193Provider 
+    };
+    
+    fheInstance = await createInstance(config);
+    console.log('✅ REAL FHEVM Node.js instance created successfully!');
+    return fheInstance;
+  } catch (err) {
+    console.error('FHEVM Node.js instance creation failed:', err);
+    throw err;
+  }
+}
+
+/**
+ * Initialize FHEVM instance - Environment-aware
+ * MAINTAINS BACKWARD COMPATIBILITY
+ */
+export async function initializeFheInstance(options?: { rpcUrl?: string }) {
+  // Detect environment
+  if (typeof window !== 'undefined' && window.ethereum) {
+    // Browser environment - use existing working code
+    return initializeBrowserFheInstance();
+  } else {
+    // Node.js environment - use new functionality
+    return initializeNodeFheInstance(options?.rpcUrl);
   }
 }
 

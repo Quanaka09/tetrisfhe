@@ -9,6 +9,7 @@ All examples are running with **real FHEVM interactions** on Sepolia testnet:
 - **![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) React Showcase:** [https://react-showcase-1738.up.railway.app/](https://react-showcase-1738.up.railway.app/)
 - **![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white) Next.js Showcase:** [https://nextjs-showcase-1661.up.railway.app/](https://nextjs-showcase-1661.up.railway.app/)
 - **![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D) Vue Showcase:** [https://vue-showcase-2780.up.railway.app/](https://vue-showcase-2780.up.railway.app/)
+- **![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white) Node.js Showcase:** [packages/node-showcase/](packages/node-showcase/) - **Proves our FHEVM SDK works in Node.js!**
 
 **Contract Details:**
 - **FHE Counter Contract:** `0xead137D42d2E6A6a30166EaEf97deBA1C3D1954e`
@@ -113,7 +114,7 @@ pnpm sdk:build
 | ![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB) **React** | `pnpm --filter react-showcase start` | 3000 | CDN Script | CDN-based FHEVM |
 | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white) **Next.js** | `pnpm --filter nextjs-showcase dev` | 3001 | CDN Script | Next.js with CDN |
 | ![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=flat-square&logo=vue.js&logoColor=4FC08D) **Vue** | `pnpm --filter vue-showcase dev` | 3003 | CDN Script | Vue with CDN |
-| ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat-square&logo=node.js&logoColor=white) **Node.js** | `pnpm --filter node-showcase start` | CLI | Mock | Server-side demo |
+| ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat-square&logo=node.js&logoColor=white) **Node.js** | `node test-fhevm-operations.js` or `npx tsx src/index.ts` | CLI | **Our FHEVM SDK** | **Proves our SDK works in Node.js!** |
 
 ## 🔧 **How FHEVM Loading Works**
 
@@ -214,11 +215,20 @@ pnpm dev  # Starts Vue app on http://localhost:3003
 ```bash
 # Location: packages/node-showcase/
 cd packages/node-showcase
-pnpm start  # Runs Node.js FHEVM demo
+
+# Run complete FHEVM operations test (Direct RelayerSDK)
+node test-fhevm-operations.js  # Real FHEVM operations with increment/decrement/decrypt
+
+# Or run the SDK showcase (Using your FhevmNode adapter)
+npx tsx src/index.ts  # Same workflow using your SDK
 
 # What's included:
-# - Complete Node.js FHEVM demonstration
-# - Mock FHEVM implementation
+# - Complete Node.js FHEVM demonstration with REAL operations
+# - Real blockchain transactions on Sepolia testnet
+# - Complete increment → decrement → decrypt workflow
+# - EIP-712 decryption with wallet signing
+# - **Proves our FHEVM SDK works in Node.js!**
+# - Both direct RelayerSDK and our SDK adapter
 # - Ready to edit and develop
 ```
 
