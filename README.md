@@ -59,21 +59,6 @@ All examples are running with **real FHEVM interactions** on Sepolia testnet:
 fhevm-react-template/
 ├── packages/
 │   ├── fhevm-sdk/              # Universal FHEVM SDK Core
-│   │   ├── src/
-│   │   │   ├── core/           # Core FHEVM functionality
-│   │   │   ├── adapters/       # Framework adapters
-│   │   │   │   ├── react.ts    # React hooks (all-in-one)
-│   │   │   │   ├── useWallet.ts # Individual wallet hook
-│   │   │   │   ├── useFhevm.ts # Individual FHEVM hook
-│   │   │   │   ├── useContract.ts # Individual contract hook
-│   │   │   │   ├── useEncrypt.ts # Individual encryption hook
-│   │   │   │   ├── useDecrypt.ts # Individual decryption hook
-│   │   │   │   ├── useFhevmOperations.ts # Combined operations hook
-│   │   │   │   ├── vue.ts      # Vue composables
-│   │   │   │   ├── node.ts     # Node.js adapter
-│   │   │   │   └── vanilla.ts  # Vanilla JS adapter
-│   │   │   └── index.ts        # Main SDK exports
-│   │   └── dist/               # Built SDK
 │   ├── react-showcase/         # React Example (Port 3000)
 │   ├── nextjs-showcase/        # Next.js Example (Port 3001)
 │   ├── vue-showcase/           # Vue Example (Port 3003)
@@ -462,47 +447,6 @@ await fhevm.initialize();
 const fhevm = new FhevmVanilla();
 await fhevm.initialize();
 ```
-
-### **Modular Adapter Structure**
-
-The SDK provides a modular architecture with individual adapter files for maximum flexibility:
-
-#### **Individual Hooks (Modular Import)**
-```typescript
-// Import individual hooks for better tree-shaking
-import { useWallet } from '@fhevm-sdk/adapters/useWallet';
-import { useFhevm } from '@fhevm-sdk/adapters/useFhevm';
-import { useContract } from '@fhevm-sdk/adapters/useContract';
-import { useEncrypt } from '@fhevm-sdk/adapters/useEncrypt';
-import { useDecrypt } from '@fhevm-sdk/adapters/useDecrypt';
-import { useFhevmOperations } from '@fhevm-sdk/adapters/useFhevmOperations';
-
-function MyComponent() {
-  const wallet = useWallet();
-  const fhevm = useFhevm();
-  const contract = useContract(contractAddress, abi);
-  const encrypt = useEncrypt();
-  const decrypt = useDecrypt();
-  const operations = useFhevmOperations();
-  
-  // Use individual hooks...
-}
-```
-
-#### **Available Adapter Files**
-- **`useWallet.ts`** - Wallet connection and management
-- **`useFhevm.ts`** - FHEVM instance initialization
-- **`useContract.ts`** - Contract instance management
-- **`useEncrypt.ts`** - Encryption operations
-- **`useDecrypt.ts`** - Decryption operations
-- **`useFhevmOperations.ts`** - Combined operations hook
-
-#### **Benefits of Modular Structure**
-- ✅ **Tree Shaking** - Import only what you need
-- ✅ **Better Performance** - Smaller bundle sizes
-- ✅ **Easier Testing** - Test individual hooks separately
-- ✅ **Clearer Dependencies** - Each file has single responsibility
-- ✅ **Future Flexibility** - Easy to extend or modify individual adapters
 
 ### **Installation**
 

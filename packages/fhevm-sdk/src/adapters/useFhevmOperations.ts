@@ -60,3 +60,18 @@ export function useFhevmOperations() {
     hasError: !!(encryptError || decryptError),
   };
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
