@@ -58,12 +58,35 @@ module.exports = {
         "clearInterval": false
       };
 
+      // Ignore Vue imports in React showcase (Vue adapters are not used)
+      webpackConfig.plugins = webpackConfig.plugins || [];
+      webpackConfig.plugins.push(
+        new webpack.IgnorePlugin({
+          resourceRegExp: /^vue$/,
+          contextRegExp: /@fhevm-sdk/
+        })
+      );
+
       // Only externalize Node.js specific modules, not browser-compatible ones
       webpackConfig.externals = webpackConfig.externals || [];
       webpackConfig.externals.push({
         '@zama-fhe/relayer-sdk/node': 'commonjs @zama-fhe/relayer-sdk/node'
         // Note: ethers is browser-compatible, so we bundle it instead of externalizing
       });
+
+      // Ensure proper module resolution order to prevent multiple React instances
+      // Don't use aliases for React as it breaks subpath imports (react/jsx-dev-runtime, react-dom/client)
+      // Instead, ensure node_modules resolution prioritizes the app's node_modules
+      const path = require('path');
+      webpackConfig.resolve = webpackConfig.resolve || {};
+      webpackConfig.resolve.modules = [
+        path.resolve(__dirname, 'node_modules'), // Prioritize app's node_modules
+        ...(webpackConfig.resolve.modules || ['node_modules']),
+        'node_modules'
+      ];
+
+      // Ensure symlinks are resolved to prevent duplicate React instances
+      webpackConfig.resolve.symlinks = true;
 
       return webpackConfig;
     },
