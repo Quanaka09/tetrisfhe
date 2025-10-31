@@ -251,9 +251,83 @@ class FhevmNode {
 
 ## 📱 **Usage**
 
+### **Interactive CLI Mode (Recommended)**
+
+The easiest way to explore FHEVM demos is through the interactive CLI wizard:
+
 ```bash
-# Run all demos
+# Start the interactive explorer
+pnpm explorer
+```
+
+**Features:**
+- 🌐 **Beautiful interactive menu** - Choose which demo to run
+- 🔢 **Counter Demo** - Increment/decrement operations with prompts
+- 🗳️ **Voting Demo** - Encrypted voting with interactive choices
+- ⭐ **Ratings Demo** - Submit ratings with user input
+- 🔍 **Test Mode** - Verify your setup before running demos
+- 🎯 **Run All** - Execute all demos in sequence
+- 📊 **Session Summary** - Track all demos you've completed
+
+**Interactive Experience:**
+- Guided step-by-step demos
+- User prompts for values (increment amounts, ratings, votes)
+- Real-time transaction feedback
+- Loading spinners and progress indicators
+- Session tracking and summary at the end
+
+**Example Session:**
+```
+🌐 Welcome to FHEVM Explorer!
+Universal FHEVM SDK - Interactive Demo Experience
+
+Choose your FHEVM demo:
+❯ 🔢 Counter Demo - Increment/Decrement Operations
+  🗳️  Voting Demo - Encrypted Voting System
+  ⭐ Ratings Demo - Review Cards with Encrypted Ratings
+  🔍 Test Mode - Verify Setup Only
+  🎯 Run All Demos
+  ❌ Exit Explorer
+```
+
+### **HTTP Server Mode**
+
+Run the showcase as an HTTP server with API endpoints:
+
+```bash
+# Start the HTTP server
 pnpm start
+
+# Server runs on http://localhost:3001
+# Available endpoints:
+# - GET  /          - List available endpoints
+# - GET  /health    - Health check
+# - GET  /config    - Get FHEVM configuration
+# - POST /counter   - Run counter demo
+# - POST /voting    - Run voting demo
+# - POST /ratings   - Run ratings demo
+# - POST /run-all   - Run all demos
+```
+
+**Test endpoints using PowerShell:**
+```powershell
+# Run counter demo
+Invoke-RestMethod -Uri http://localhost:3001/counter -Method POST
+
+# Run voting demo
+Invoke-RestMethod -Uri http://localhost:3001/voting -Method POST
+
+# Get configuration
+Invoke-RestMethod -Uri http://localhost:3001/config -Method GET
+```
+
+### **Non-Interactive CLI Mode**
+
+Run all demos sequentially without interaction:
+
+```bash
+# Run all demos at once
+pnpm cli
 
 # Output includes:
 # - Counter demo: Increment → Decrement → Decrypt
@@ -264,10 +338,16 @@ pnpm start
 ## 🛠️ **Development**
 
 ```bash
-# Run showcase
+# Interactive CLI mode (recommended for testing)
+pnpm explorer
+
+# HTTP server mode
 pnpm start
 
-# Development mode (watch)
+# Non-interactive CLI mode
+pnpm cli
+
+# Development mode (watch HTTP server)
 pnpm dev
 
 # Build TypeScript
@@ -282,6 +362,10 @@ pnpm build
 - `typescript` - Type safety
 - `tsx` - TypeScript execution
 - `dotenv` - Environment variables
+- `express` - HTTP server (for server mode)
+- `inquirer` - Interactive prompts (for explorer mode)
+- `chalk` - Terminal colors (for explorer mode)
+- `ora` - Loading spinners (for explorer mode)
 
 ## 🎉 **Success Metrics**
 
