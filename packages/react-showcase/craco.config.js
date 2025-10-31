@@ -60,6 +60,16 @@ module.exports = {
 
       // Ignore Vue imports in React showcase (Vue adapters are not used)
       webpackConfig.plugins = webpackConfig.plugins || [];
+      
+      // Replace Vue adapter with empty module for React builds
+      webpackConfig.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(
+          /@fhevm-sdk\/dist\/adapters\/vue\.js$/,
+          require.resolve('./src/vue-stub.js')
+        )
+      );
+      
+      // Also ignore vue imports
       webpackConfig.plugins.push(
         new webpack.IgnorePlugin({
           resourceRegExp: /^vue$/,
