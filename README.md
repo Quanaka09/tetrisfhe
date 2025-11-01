@@ -429,6 +429,87 @@ pnpm dev
 pnpm build
 ```
 
+## 🎯 **FHEVM Explorer - Interactive Demo Experience**
+
+The **FHEVM Explorer** is an interactive CLI wizard that provides a guided, user-friendly way to explore the Universal FHEVM SDK capabilities. It's the recommended way to experience FHEVM demos step-by-step.
+
+### **What the Explorer Does**
+
+The Explorer offers a beautiful, context-aware interface that guides you through FHEVM operations:
+
+- **🌐 Interactive Menu** - Navigate through different demo options with arrow keys
+- **🔢 Counter Demo** - Experience increment/decrement operations with encrypted values
+  - Interactive prompts for increment/decrement amounts
+  - Real-time transaction feedback
+  - Decryption results display
+- **🗳️ Voting Demo** - Explore encrypted voting systems
+  - Create voting sessions or use existing ones
+  - Choose votes (Yes/No) with encryption
+  - View encrypted results after voting
+- **⭐ Ratings Demo** - Submit encrypted ratings and reviews
+  - Create review cards
+  - Submit encrypted ratings with user input
+  - View public decrypted statistics
+- **🔍 Test Mode** - Verify your setup before running demos
+  - Check environment variables configuration
+  - Verify network connection
+  - Test wallet setup
+  - Validate FHEVM client initialization
+  - Verify contract accessibility
+- **🎯 Run All Demos** - Execute all demos sequentially in one session
+- **📊 Session Summary** - Track all completed demos with timestamps and results
+
+### **Key Features**
+
+- **Beautiful UI** - Color-coded output with loading spinners and progress indicators
+- **Guided Experience** - Step-by-step prompts that walk you through each operation
+- **Real Transactions** - All demos use actual blockchain transactions on Sepolia testnet
+- **Error Handling** - Helpful error messages and recovery suggestions
+- **Session Tracking** - Keep track of all demos you've completed with detailed summaries
+
+### **Example Session Flow**
+
+```
+🌐 Welcome to FHEVM Explorer!
+Universal FHEVM SDK - Interactive Demo Experience
+
+   Explore the world of confidential computing on blockchain
+   Experience encrypted operations with guided demos
+
+✅ FHEVM environment ready!
+   Wallet: 0xb8c81a641A4A4C47d11e5464C77EdcB9737784CC
+   Balance: 0.042681970725989092 ETH
+   Network: Sepolia (11155111)
+
+? Choose your FHEVM demo:
+❯ 🔢 Counter Demo - Increment/Decrement Operations
+  🗳️  Voting Demo - Encrypted Voting System
+  ⭐ Ratings Demo - Review Cards with Encrypted Ratings
+  🔍 Test Mode - Verify Setup Only
+  🎯 Run All Demos
+  ❌ Exit Explorer
+```
+
+### **How to Use**
+
+```bash
+# Navigate to node-showcase
+cd packages/node-showcase
+
+# Start the interactive explorer
+pnpm explorer
+```
+
+The Explorer will:
+1. Initialize your FHEVM environment and verify configuration
+2. Display an interactive menu with all available demos
+3. Guide you through each demo with prompts and feedback
+4. Show real-time transaction status and results
+5. Track your session and provide a summary at the end
+
+This is the perfect tool for developers learning FHEVM or demonstrating the SDK's capabilities to others!
+
+
 
 ## 📚 **Showcase Documentation**
 
