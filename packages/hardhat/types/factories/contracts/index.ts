@@ -4,3 +4,4 @@
 export * as reviewCardsFheUint32Sol from "./ReviewCardsFHE_uint32.sol";
 export { FHECounter__factory } from "./FHECounter__factory";
 export { SimpleVoting_uint32__factory } from "./SimpleVoting_uint32__factory";
+export { TetrisFHE__factory } from "./TetrisFHE__factory";

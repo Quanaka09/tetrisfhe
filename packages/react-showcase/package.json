@@ -19,6 +19,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "cd ../hardhat && pnpm exec hardhat test ../react-showcase/test/FHECounter.test.js ../react-showcase/test/FHERatings.test.js ../react-showcase/test/SimpleVoting.test.js",
+    "test:tetris": "cd ../hardhat && pnpm exec hardhat test ../../test/tetris/TetrisFHE.test.js",
     "test:watch": "cd ../hardhat && pnpm exec hardhat test ../react-showcase/test/FHECounter.test.js ../react-showcase/test/FHERatings.test.js ../react-showcase/test/SimpleVoting.test.js --watch",
     "eject": "react-scripts eject"
   },

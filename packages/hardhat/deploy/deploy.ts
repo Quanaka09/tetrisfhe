@@ -28,11 +28,28 @@ async function main() {
   const votingAddress = await simpleVoting.getAddress();
   console.log(`SimpleVoting_uint32 contract deployed to: ${votingAddress}`);
   
+  // Deploy TetrisFHE contract
+  console.log("Deploying TetrisFHE contract...");
+  const TetrisFHE = await hre.ethers.getContractFactory("TetrisFHE");
+  const tetrisFHE = await TetrisFHE.deploy();
+  await tetrisFHE.waitForDeployment();
+  const tetrisAddress = await tetrisFHE.getAddress();
+  console.log(`TetrisFHE contract deployed to: ${tetrisAddress}`);
+  
   console.log("\n=== Deployment Summary ===");
   console.log(`FHECounter: ${counterAddress}`);
   console.log(`ReviewCardsFHE: ${reviewCardsAddress}`);
   console.log(`SimpleVoting_uint32: ${votingAddress}`);
+  console.log(`TetrisFHE: ${tetrisAddress}`);
 }
+
+// Run main function
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
 
 // Export the main function for hardhat-deploy
 export default main;

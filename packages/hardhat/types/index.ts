@@ -28,3 +28,5 @@ export type { ReviewCardsFHE } from "./contracts/ReviewCardsFHE_uint32.sol/Revie
 export { ReviewCardsFHE__factory } from "./factories/contracts/ReviewCardsFHE_uint32.sol/ReviewCardsFHE__factory";
 export type { SimpleVoting_uint32 } from "./contracts/SimpleVoting_uint32";
 export { SimpleVoting_uint32__factory } from "./factories/contracts/SimpleVoting_uint32__factory";
+export type { TetrisFHE } from "./contracts/TetrisFHE";
+export { TetrisFHE__factory } from "./factories/contracts/TetrisFHE__factory";

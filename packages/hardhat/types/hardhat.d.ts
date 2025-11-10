@@ -57,6 +57,10 @@ declare module "hardhat/types/runtime" {
       name: "SimpleVoting_uint32",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SimpleVoting_uint32__factory>;
+    getContractFactory(
+      name: "TetrisFHE",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TetrisFHE__factory>;
 
     getContractAt(
       name: "EthereumConfig",
@@ -113,6 +117,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.SimpleVoting_uint32>;
+    getContractAt(
+      name: "TetrisFHE",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TetrisFHE>;
 
     deployContract(
       name: "EthereumConfig",
@@ -158,6 +167,10 @@ declare module "hardhat/types/runtime" {
       name: "SimpleVoting_uint32",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SimpleVoting_uint32>;
+    deployContract(
+      name: "TetrisFHE",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.TetrisFHE>;
 
     deployContract(
       name: "EthereumConfig",
@@ -214,6 +227,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SimpleVoting_uint32>;
+    deployContract(
+      name: "TetrisFHE",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.TetrisFHE>;
 
     // default types
     getContractFactory(
