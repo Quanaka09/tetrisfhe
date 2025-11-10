@@ -100,7 +100,6 @@ const TETRIS_CONTRACT_ABI = [
 
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
-const INITIAL_PLAYS = 5;
 
 const SHAPES = {
   I: [[1, 1, 1, 1]],
@@ -163,8 +162,8 @@ const RetroTetris = () => {
   // FHEVM hooks
   const { address, chainId, isConnected, connect } = useWallet();
   const { status: fhevmStatus, initialize } = useFhevm();
-  const { encrypt, isEncrypting, error: encryptError } = useEncrypt();
-  const { publicDecrypt, decrypt, isDecrypting } = useDecrypt();
+  const { encrypt, isEncrypting } = useEncrypt();
+  const { publicDecrypt, isDecrypting } = useDecrypt();
 
   // Auto-initialize FHEVM when wallet connects
   useEffect(() => {
@@ -315,7 +314,7 @@ const RetroTetris = () => {
   };
 
   // Load plays from onchain
-  const loadPlays = async () => {
+  const loadPlays = useCallback(async () => {
     if (!isConnected || !address || !window.ethereum || !contractAddress) {
       setIsLoading(false);
       return;
@@ -350,29 +349,9 @@ const RetroTetris = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isConnected, address, contractAddress]);
 
-  // Load plays when wallet connects
-  useEffect(() => {
-    if (isConnected && address && contractAddress && fhevmStatus === 'ready') {
-      loadPlays();
-    }
-  }, [isConnected, address, contractAddress, fhevmStatus]);
-
-  // Load leaderboard from blockchain (chỉ khi có EIP-712 signature)
-  useEffect(() => {
-    if (isConnected && fhevmStatus === 'ready' && contractAddress && eip712Signature) {
-      loadLeaderboard();
-    }
-  }, [isConnected, fhevmStatus, contractAddress, eip712Signature]);
-
-  // Update level based on score
-  useEffect(() => {
-    const newLevel = Math.floor(score / 500) + 1;
-    setLevel(newLevel);
-  }, [score]);
-
-  const loadLeaderboard = async () => {
+  const loadLeaderboard = useCallback(async () => {
     // Chỉ load từ onchain, không có fallback localStorage
     if (!isConnected || !window.ethereum || !contractAddress) {
       setLeaderboard([]);
@@ -392,14 +371,14 @@ const RetroTetris = () => {
       setIsLoading(true);
       const provider = new ethers.BrowserProvider(window.ethereum);
       const contract = new ethers.Contract(contractAddress, TETRIS_CONTRACT_ABI, provider);
-      
+
       const totalScores = await contract.getTotalScores();
       const leaderboardData: LeaderboardEntry[] = [];
 
       // Load all scores, then sort and take top 10
       const total = Number(totalScores);
       setMessage(`Loading ${total} scores from blockchain...`);
-      
+
       for (let i = 0; i < total; i++) {
         try {
           const [player, timestamp, exists] = await contract.getScoreInfo(i);
@@ -408,12 +387,12 @@ const RetroTetris = () => {
             // Contract đã makePubliclyDecryptable() nên có thể dùng publicDecrypt()
             // Tuy nhiên, vẫn yêu cầu EIP-712 signature để verify user identity
             const [scoreBytes, linesBytes, levelBytes] = await contract.getEncryptedScore(i);
-            
+
             // Kiểm tra có EIP-712 signature không (requirement của app, không phải FHEVM)
             if (!eip712Signature) {
               throw new Error('EIP-712 signature required for decryption');
             }
-            
+
             // Sử dụng publicDecrypt vì contract đã makePubliclyDecryptable()
             // Đây là chuẩn FHEVM: nếu makePubliclyDecryptable() thì dùng publicDecrypt()
             const [decryptedScore, decryptedLines, decryptedLevel] = await Promise.all([
@@ -450,7 +429,27 @@ const RetroTetris = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isConnected, contractAddress, eip712Signature, publicDecrypt]);
+
+  // Load plays when wallet connects
+  useEffect(() => {
+    if (isConnected && address && contractAddress && fhevmStatus === 'ready') {
+      loadPlays();
+    }
+  }, [isConnected, address, contractAddress, fhevmStatus, loadPlays]);
+
+  // Load leaderboard from blockchain (chỉ khi có EIP-712 signature)
+  useEffect(() => {
+    if (isConnected && fhevmStatus === 'ready' && contractAddress && eip712Signature) {
+      loadLeaderboard();
+    }
+  }, [isConnected, fhevmStatus, contractAddress, eip712Signature, loadLeaderboard]);
+
+  // Update level based on score
+  useEffect(() => {
+    const newLevel = Math.floor(score / 500) + 1;
+    setLevel(newLevel);
+  }, [score]);
 
   const createPiece = useCallback(() => {
     const shapes = Object.keys(SHAPES);
@@ -538,7 +537,7 @@ const RetroTetris = () => {
     }
 
     return { board: newBoard, linesCleared };
-  }, [level, combo]);
+  }, []);
 
   const rotatePiece = useCallback((piece: any) => {
     const rotated = piece.shape[0].map((_: any, i: number) =>
@@ -681,7 +680,7 @@ const RetroTetris = () => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const contract = new ethers.Contract(contractAddress, TETRIS_CONTRACT_ABI, provider);
-      const [canCheck, _] = await contract.canCheckIn(address);
+      const [canCheck] = await contract.canCheckIn(address);
       return canCheck;
     } catch {
       return false;
@@ -847,7 +846,7 @@ const RetroTetris = () => {
       try {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const contract = new ethers.Contract(contractAddress, TETRIS_CONTRACT_ABI, provider);
-        const [_, lastCheckinTime] = await contract.canCheckIn(address);
+        const [, lastCheckinTime] = await contract.canCheckIn(address);
         const lastCheckin = Number(lastCheckinTime) * 1000; // Convert to milliseconds
         const cooldown = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
         const nextCheckinTime = lastCheckin + cooldown;
@@ -944,7 +943,7 @@ const RetroTetris = () => {
         try {
           const provider = new ethers.BrowserProvider(window.ethereum);
           const contract = new ethers.Contract(contractAddress, TETRIS_CONTRACT_ABI, provider);
-          const [_, lastCheckinTime] = await contract.canCheckIn(address);
+          const [, lastCheckinTime] = await contract.canCheckIn(address);
           const lastCheckin = Number(lastCheckinTime) * 1000;
           const cooldown = 24 * 60 * 60 * 1000;
           const nextCheckinTime = lastCheckin + cooldown;

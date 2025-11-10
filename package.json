@@ -3,6 +3,7 @@
   "version": "0.4.0",
   "private": true,
   "license": "BSD-3-Clause-Clear",
+  "packageManager": "pnpm@10.18.2",
   "engines": {
     "node": ">=20.0.0"
   },
@@ -55,6 +56,8 @@
     "vercel": "pnpm --filter ./packages/nextjs vercel",
     "vercel:login": "pnpm --filter ./packages/nextjs vercel:login",
     "vercel:yolo": "pnpm --filter ./packages/nextjs vercel:yolo",
+    "vercel:link": "vercel link",
+    "vercel:deploy": "vercel deploy --prod --yes",
     "verify": "pnpm hardhat:verify",
     "verify:sepolia": "pnpm hardhat:verify:sepolia"
   },
@@ -66,7 +69,8 @@
     "@types/node": "^22.7.5",
     "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vercel": "^48.9.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

@@ -11,6 +11,8 @@ packages/*/.turbo
 packages/*/coverage
 tmp*
 .vscode
+/.vercel/
+**/.vercel/
 
 # NPX package folders (these are published separately as npm packages)
 create-fhevm-nextjs/
