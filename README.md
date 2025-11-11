@@ -1,10 +1,12 @@
-# RETRO TETRIS FHE GAME
+# Tetris FHE Game
 
 A fully homomorphic encryption (FHE) powered Tetris experience built on the FHEVM stack. Players compete by submitting encrypted scores that are verified and ranked entirely on-chain while preserving privacy.
 
+> **Live demo:** [https://terisfhe2025.vercel.app/](https://terisfhe2025.vercel.app/)
+
 ## Overview
 
-RETRO TETRIS FHE GAME demonstrates how classic gameplay can run in a decentralized, privacy-preserving setting:
+Tetris FHE Game demonstrates how classic gameplay can run in a decentralized, privacy-preserving setting:
 
 - React front-end rendered from `packages/react-showcase`
 - Hardhat smart contracts under `packages/hardhat`
@@ -19,6 +21,7 @@ RETRO TETRIS FHE GAME demonstrates how classic gameplay can run in a decentraliz
 - **Wallet Gated Gameplay** – The interface is publicly viewable, but playing requires wallet connection, successful check-in, and available plays.
 - **Game Over Publishing Flow** – Final scores can be published directly from the game over modal via a single transaction.
 - **Resilient Relayer Handling** – Encryption requests automatically retry with exponential backoff to handle relayer throttling.
+- **COOP/COEP Ready Deployment** – Production hosting requires `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp` headers so the FHEVM relayer can spawn threads. These are set at the Vercel project level.
 
 ## FHE Compliance Highlights
 
@@ -54,7 +57,7 @@ scripts/            # Utility scripts (e.g., ABI generation)
    ```
 4. **Run the React showcase**:
    ```bash
-   pnpm --filter react-showcase dev
+   pnpm --filter react-showcase start
    ```
    The app serves the RETRO TETRIS FHE GAME interface with wallet gating and leaderboard.
 
@@ -84,9 +87,24 @@ scripts/            # Utility scripts (e.g., ABI generation)
 - **Contract Tests** (`packages/hardhat/test`): run via `pnpm --filter hardhat test`.
 - **Integration Tests** (`test/tetris`): validate end-to-end encryption, submission, and leaderboard flows against a local or testnet deployment.
 
+## Vercel Deployment
+
+- Continuous deployments expect the repo root and rely on `vercel.json`:
+  - Install: `pnpm install`
+  - Build: `pnpm --filter react-showcase build`
+  - Output: `packages/react-showcase/build`
+- After each deploy, visit the project settings on Vercel and make sure the COOP/COEP headers are present (required by the relayer SDK).
+- Production deployment example: [https://terisfhe2025.vercel.app/](https://terisfhe2025.vercel.app/).
+
+## Known Issues
+
+- If the relayer responds with `backend connection task has stopped`, retry later—the hosted relayer might be temporarily unavailable.
+- Legacy contracts without `canCheckIn` support will cause CALL_EXCEPTION errors. Ensure the Sepolia deployment uses the latest `TetrisFHE.sol`.
+- Browsers that block cross-origin isolation (missing COOP/COEP headers) will log `This browser does not support threads`. Confirm headers are configured on the host.
+
 ## Author & Credits
 
 - Game adaptation and FHE integration by [@QuanCrytoGM](https://x.com/QuanCrytoGM)
 - Powered by Zama FHEVM libraries and tooling
 
-Enjoy the RETRO TETRIS FHE GAME and explore what privacy-preserving gaming feels like! 🚀
+Enjoy Tetris FHE Game and explore what privacy-preserving gaming feels like! 🚀
